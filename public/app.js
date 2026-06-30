@@ -58,7 +58,7 @@ const industryPrompts = {
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+window.initApp = function() { 
     // Load data from session storage if available
     const savedData = sessionStorage.getItem(StorageKey);
     if (savedData) {
@@ -74,7 +74,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('summary-section')) {
         initSummaryPage();
     }
-});
+
+    // Scroll reveal animation logic
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.remove("opacity-0", "translate-y-8");
+                entry.target.classList.add("opacity-100", "translate-y-0");
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+ };
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.initApp);
+} else {
+    window.initApp();
+}
 
 function initInputPage() {
     // Setup enter key listeners
@@ -128,7 +145,7 @@ function generateId() {
     return Math.random().toString(36).substr(2, 9);
 }
 
-function addItem(button, type) {
+window.addItem = function addItem(button, type) {
     const container = button.parentElement;
     const input = container.querySelector('input');
     const select = container.querySelector('select');
@@ -153,7 +170,7 @@ function addItem(button, type) {
     }
 }
 
-function moveItem(type, index, direction) {
+window.moveItem = function moveItem(type, index, direction) {
     if (direction === 'up' && index > 0) {
         const temp = swotData.points[type][index - 1];
         swotData.points[type][index - 1] = swotData.points[type][index];
@@ -167,7 +184,7 @@ function moveItem(type, index, direction) {
     saveData();
 }
 
-function removeItem(type, id) {
+window.removeItem = function removeItem(type, id) {
     swotData.points[type] = swotData.points[type].filter(p => p.id !== id);
     renderInputList(type);
     saveData();
@@ -357,23 +374,34 @@ async function initSummaryPage() {
 
     await new Promise(r => setTimeout(r, 1500));
     
-    const company = swotData.companyName || "The organization";
-    const s = swotData.points.strengths[0]?.text || "core operational capabilities";
-    const o = swotData.points.opportunities[0]?.text || "emerging market trends";
-    const w = swotData.points.weaknesses[0]?.text || "internal resource constraints";
-    const t = swotData.points.threats[0]?.text || "competitive industry pressures";
-
-    aiContent.innerHTML = `
-        <p class="font-body-md text-on-surface-variant mb-4 leading-relaxed">
-            Based on the analysis, ${company} possesses a critical advantage in <strong class="text-swot-threat font-semibold">"${s}"</strong>. By leveraging this strength, leadership should proactively target <strong class="text-swot-threat font-semibold">"${o}"</strong>, creating a barrier to entry before external shifts solidify the market.
-        </p>
-        <p class="font-body-md text-on-surface-variant mb-4 leading-relaxed">
-            However, immediate strategic attention is required regarding <strong class="text-swot-threat font-semibold">"${w}"</strong>. If left unaddressed, this vulnerability significantly amplifies the risk posed by <strong class="text-swot-threat font-semibold">"${t}"</strong>.
-        </p>
-        <p class="font-body-md text-on-surface-variant leading-relaxed">
-            <strong>Recommendation:</strong> Transitioning to a structured framework that mitigates this weakness will allow the firm to capitalize on its high-precision competitive advantage and sustain long-term growth.
-        </p>
-    `;
+    try {
+        const res = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(swotData)
+        });
+        const data = await res.json();
+        
+        if (res.ok && data.synthesis) {
+            aiContent.innerHTML = data.synthesis;
+        } else {
+            aiContent.innerHTML = `
+                <div class="bg-error-container p-4 rounded-xl border border-error/20">
+                    <p class="text-on-error-container font-body-md">
+                        <span class="material-symbols-outlined align-middle mr-2">error</span>
+                        ${data.error || 'Failed to generate synthesis.'}
+                    </p>
+                </div>`;
+        }
+    } catch (e) {
+        aiContent.innerHTML = `
+            <div class="bg-error-container p-4 rounded-xl border border-error/20">
+                <p class="text-on-error-container font-body-md">
+                    <span class="material-symbols-outlined align-middle mr-2">error</span>
+                    Network error: ${e.message}
+                </p>
+            </div>`;
+    }
     
     aiLoading.classList.add('hidden');
 }
@@ -431,14 +459,14 @@ function downloadSummary() {
     addText("Synthesis & Recommendation", 16, true, [0, 0, 0]);
     y += 5;
     
-    const s = swotData.points.strengths[0]?.text || "core operational capabilities";
-    const o = swotData.points.opportunities[0]?.text || "emerging market trends";
-    const w = swotData.points.weaknesses[0]?.text || "internal resource constraints";
-    const t = swotData.points.threats[0]?.text || "competitive industry pressures";
-    
-    addText(`Based on the analysis, ${company} possesses a critical advantage in "${s}". By leveraging this strength, leadership should proactively target "${o}", creating a barrier to entry before external shifts solidify the market.`, 11, false, [60, 60, 60]);
-    addText(`However, immediate strategic attention is required regarding "${w}". If left unaddressed, this vulnerability significantly amplifies the risk posed by "${t}".`, 11, false, [60, 60, 60]);
-    addText(`Recommendation: Transitioning to a structured framework that mitigates this weakness will allow the firm to capitalize on its high-precision competitive advantage and sustain long-term growth.`, 11, true, [40, 40, 40]);
+    const aiParagraphs = document.querySelectorAll('#ai-synthesis-content p');
+    if (aiParagraphs.length > 0) {
+        aiParagraphs.forEach(p => {
+            addText(p.innerText, 11, false, [60, 60, 60]);
+        });
+    } else {
+        addText("Strategic synthesis is not available or still generating.", 11, false, [60, 60, 60]);
+    }
     y += 15;
 
     // SWOT Categories
