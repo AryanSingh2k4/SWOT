@@ -412,7 +412,7 @@ function downloadSummary() {
     const doc = new jsPDF();
 
     // ---- Theme ----
-    const BRAND_PURPLE = [99, 14, 212];
+    const BRAND_PURPLE = [76, 29, 149];
     const BRAND_PURPLE_LIGHT = [230, 215, 250];
     const COLOR_TEXT = [33, 33, 33];
     const COLOR_MUTED = [110, 110, 110];

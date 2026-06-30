@@ -53,7 +53,7 @@ export default function RootLayout({ children }) {
                         "on-error-container": "#93000a",
                         "on-primary-fixed": "#25005a",
                         "outline": "#7b7487",
-                        "primary": "#630ed4",
+                        "primary": "#4C1D95",
                         "surface-container": "#e6eeff",
                         "surface": "#f8f9ff",
                         "secondary": "#625595",
