@@ -407,105 +407,259 @@ async function initSummaryPage() {
 }
 
 function downloadSummary() {
-    window.scrollTo(0,0);
-    const element = document.getElementById('pdf-content');
+    window.scrollTo(0, 0);
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    
-    // Config
-    const margin = 20;
-    let y = margin;
+
+    // ---- Theme ----
+    const BRAND_PURPLE = [99, 14, 212];
+    const BRAND_PURPLE_LIGHT = [230, 215, 250];
+    const COLOR_TEXT = [33, 33, 33];
+    const COLOR_MUTED = [110, 110, 110];
+    const COLOR_WHITE = [255, 255, 255];
+    const COLOR_BORDER = [225, 220, 235];
+
+    const QUADRANTS = {
+        strengths:     { label: "Strengths",     color: [34, 139, 87] },   // green
+        weaknesses:    { label: "Weaknesses",    color: [200, 60, 60] },   // red
+        opportunities: { label: "Opportunities", color: [40, 100, 200] },  // blue
+        threats:       { label: "Threats",       color: [210, 130, 20] }, // orange
+    };
+    const PRIORITY_COLORS = { high: [200, 40, 40], medium: [200, 140, 0], low: [110, 110, 110] };
+
+    const margin = 18;
     const pageWidth = doc.internal.pageSize.getWidth();
-    const maxLineWidth = pageWidth - (margin * 2);
-    
-    // Helpers
-    const addText = (text, size, isBold, color = [0, 0, 0], xOffset = 0, isCentered = false) => {
-        doc.setFontSize(size);
-        doc.setFont("helvetica", isBold ? "bold" : "normal");
-        doc.setTextColor(color[0], color[1], color[2]);
-        const lines = doc.splitTextToSize(text, maxLineWidth - xOffset * 2);
-        
-        // Page break check
-        if (y + (lines.length * size * 0.4) > doc.internal.pageSize.getHeight() - margin) {
-            doc.addPage();
-            y = margin;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const contentWidth = pageWidth - margin * 2;
+    const footerZone = 16;
+    const headerZone = 14;
+
+    let y = margin;
+    let pageNum = 1;
+    const company = swotData.companyName || "Project Lotus";
+    const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    const lh = (size, factor = 1.15) => size * 0.3528 * factor;
+
+    // ---- Header / Footer drawn on every page ----
+    const drawHeaderFooter = () => {
+        // Slim top header (repeated brand bar, not the big banner — that's only on page 1)
+        if (pageNum > 1) {
+            doc.setFontSize(8.5);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(...BRAND_PURPLE);
+            doc.text(company.toUpperCase(), margin, 10);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(...COLOR_MUTED);
+            doc.text("Strategic Audit", pageWidth - margin, 10, { align: "right" });
+            doc.setDrawColor(...COLOR_BORDER);
+            doc.line(margin, 13, pageWidth - margin, 13);
         }
-        
-        if (isCentered) {
-            lines.forEach(line => {
-                const w = doc.getTextWidth(line);
-                doc.text(line, (pageWidth - w) / 2, y);
-                y += (size * 0.4) + 2;
-            });
-            y += 2;
-        } else {
-            doc.text(lines, margin + xOffset, y);
-            y += (lines.length * size * 0.4) + 6; // better line spacing
+        // Footer
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(...COLOR_MUTED);
+        doc.text(`${dateStr}`, margin, pageHeight - 8);
+        doc.text(`Page ${pageNum}`, pageWidth - margin, pageHeight - 8, { align: "right" });
+    };
+
+    const newPage = () => {
+        doc.addPage();
+        pageNum += 1;
+        y = pageNum > 1 ? headerZone + 8 : margin;
+    };
+
+    const checkPageBreak = (needed) => {
+        if (y + needed > pageHeight - footerZone) {
+            newPage();
         }
     };
 
-    // Title
-    const company = swotData.companyName || "Project Lotus";
-    doc.setFillColor(99, 14, 212);
-    doc.roundedRect(margin, y, maxLineWidth, 40, 4, 4, 'F');
-    y += 18; // Move baseline inside the box
-    addText(`Strategic Audit: ${company}`, 22, true, [255, 255, 255], 0, true);
-    
-    y -= 1; // minor spacing tweak for subtitle
-    const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-    addText(`Prepared on ${dateStr}`, 10, false, [220, 200, 255], 0, true);
-    y = 85;
-    // Synthesis Text
-    addText("Synthesis & Recommendation", 16, true, [0, 0, 0]);
-    y += 5;
-    
-    const aiParagraphs = document.querySelectorAll('#ai-synthesis-content p');
-    if (aiParagraphs.length > 0) {
-        aiParagraphs.forEach(p => {
-            addText(p.innerText, 11, false, [60, 60, 60]);
-        });
-    } else {
-        addText("Strategic synthesis is not available or still generating.", 11, false, [60, 60, 60]);
-    }
-    y += 15;
+    // ---- Body text block ----
+    const addParagraph = (text, size, color = COLOR_TEXT, bold = false) => {
+        doc.setFontSize(size);
+        doc.setFont("helvetica", bold ? "bold" : "normal");
+        doc.setTextColor(...color);
+        const lines = doc.splitTextToSize(text, contentWidth);
+        const lineH = lh(size);
+        checkPageBreak(lines.length * lineH);
+        doc.text(lines, margin, y);
+        y += lines.length * lineH + lineH * 0.6;
+    };
 
-    // SWOT Categories
-    const renderCategory = (title, items) => {
-        // Page break check for header
-        if (y + 30 > doc.internal.pageSize.getHeight() - margin) {
-            doc.addPage();
-            y = margin;
-        }
-
-        // Draw Purple Accent Box for Header (rounded)
-        doc.setFillColor(99, 14, 212); // swot-threat purple
-        doc.roundedRect(margin, y, maxLineWidth, 14, 2, 2, 'F');
-        
-        doc.setFontSize(11);
+    const sectionHeading = (text) => {
+        checkPageBreak(16);
+        doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
-        doc.setTextColor(255, 255, 255);
-        doc.text(title.toUpperCase(), margin + 8, y + 10); // Added left padding
-        y += 22;
-
-        if (items.length === 0) {
-            addText("No points added.", 11, false, [100, 100, 100], 8);
-            y += 5;
-            return;
-        }
-        
-        items.forEach(item => {
-            addText(`• ${item.text}`, 11, false, [40, 40, 40], 8);
-        });
+        doc.setTextColor(...COLOR_TEXT);
+        doc.text(text, margin, y);
+        y += 2;
+        doc.setDrawColor(...BRAND_PURPLE);
+        doc.setLineWidth(0.8);
+        doc.line(margin, y, margin + 30, y);
+        doc.setLineWidth(0.2);
         y += 8;
     };
 
-    renderCategory("Strengths", swotData.points.strengths);
-    renderCategory("Weaknesses", swotData.points.weaknesses);
-    renderCategory("Opportunities", swotData.points.opportunities);
-    renderCategory("Threats", swotData.points.threats);
+    // =====================================================
+    // COVER / TITLE BLOCK (page 1 only)
+    // =====================================================
+    const bannerHeight = 46;
+    doc.setFillColor(...BRAND_PURPLE);
+    doc.rect(0, 0, pageWidth, bannerHeight, 'F');
 
-    // Save
-    doc.save(`${(swotData.companyName || 'Project_Lotus').replace(/\s+/g, '_')}_Strategic_Audit.pdf`);
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...BRAND_PURPLE_LIGHT);
+    doc.text("STRATEGIC AUDIT", margin, 16);
+
+    doc.setFontSize(24);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...COLOR_WHITE);
+    doc.text(company, margin, 30);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...BRAND_PURPLE_LIGHT);
+    const subLine = swotData.industry ? `${swotData.industry}  •  Prepared on ${dateStr}` : `Prepared on ${dateStr}`;
+    doc.text(subLine, margin, 38);
+
+    y = bannerHeight + 12;
+
+    // =====================================================
+    // EXECUTIVE SYNTHESIS — callout box
+    // =====================================================
+    sectionHeading("Synthesis & Recommendation");
+
+    const aiParagraphs = Array.from(document.querySelectorAll('#ai-synthesis-content p')).map(p => p.innerText.trim());
+    const synthesisText = aiParagraphs.length > 0 ? aiParagraphs : ["Strategic synthesis is not available or still generating."];
+
+    // Measure box height first
+    doc.setFontSize(10.5);
+    doc.setFont("helvetica", "normal");
+    const boxPadding = 8;
+    let measuredLines = [];
+    synthesisText.forEach(para => {
+        const lines = doc.splitTextToSize(para, contentWidth - boxPadding * 2);
+        measuredLines.push({ lines, gapAfter: lh(10.5) });
+    });
+    const totalTextHeight = measuredLines.reduce((sum, p) => sum + p.lines.length * lh(10.5) + 3, 0);
+    const boxHeight = totalTextHeight + boxPadding * 2;
+
+    checkPageBreak(boxHeight + 6);
+
+    doc.setFillColor(248, 246, 252);
+    doc.setDrawColor(...COLOR_BORDER);
+    doc.roundedRect(margin, y, contentWidth, boxHeight, 3, 3, 'FD');
+    // Left accent strip
+    doc.setFillColor(...BRAND_PURPLE);
+    doc.rect(margin, y, 2.5, boxHeight, 'F');
+
+    let textY = y + boxPadding + 2;
+    doc.setTextColor(...COLOR_TEXT);
+    measuredLines.forEach(p => {
+        doc.text(p.lines, margin + boxPadding, textY);
+        textY += p.lines.length * lh(10.5) + 3;
+    });
+
+    y += boxHeight + 14;
+
+    // =====================================================
+    // SWOT 2x2 GRID
+    // =====================================================
+    sectionHeading("SWOT Breakdown");
+
+    const gridGap = 6;
+    const colWidth = (contentWidth - gridGap) / 2;
+    const order = { high: 0, medium: 1, low: 2 };
+
+    // Measure a quadrant's required height before drawing, so we can decide page breaks per row
+    const measureQuadrant = (items) => {
+        const sorted = [...(items || [])].sort((a, b) => (order[a.priority] ?? 3) - (order[b.priority] ?? 3));
+        doc.setFontSize(9.5);
+        let h = 12 + 6; // header bar + top padding
+        if (sorted.length === 0) {
+            h += lh(9.5) + 6;
+        } else {
+            sorted.forEach(item => {
+                const lines = doc.splitTextToSize(`•  ${item.text}`, colWidth - 12);
+                h += lines.length * lh(9.5) + 3;
+            });
+            h += 6;
+        }
+        return { sorted, height: h };
+    };
+
+    const drawQuadrant = (key, x, rowY, height) => {
+        const { label, color } = QUADRANTS[key];
+        const { sorted } = measureQuadrant(swotData.points[key]);
+
+        doc.setDrawColor(...COLOR_BORDER);
+        doc.roundedRect(x, rowY, colWidth, height, 2, 2, 'S');
+
+        doc.setFillColor(...color);
+        doc.roundedRect(x, rowY, colWidth, 11, 2, 2, 'F');
+        doc.rect(x, rowY + 5.5, colWidth, 5.5, 'F'); // square off bottom of header bar
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...COLOR_WHITE);
+        doc.text(label.toUpperCase(), x + 6, rowY + 7.5);
+
+        let itemY = rowY + 18;
+        doc.setFontSize(9.5);
+        doc.setFont("helvetica", "normal");
+
+        if (sorted.length === 0) {
+            doc.setTextColor(...COLOR_MUTED);
+            doc.setFont("helvetica", "italic");
+            doc.text("No points added.", x + 6, itemY);
+        } else {
+            sorted.forEach(item => {
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(...COLOR_TEXT);
+                const lines = doc.splitTextToSize(`•  ${item.text}`, colWidth - 12);
+                doc.text(lines, x + 6, itemY);
+                if (item.priority) {
+                    const pc = PRIORITY_COLORS[item.priority.toLowerCase()] || COLOR_MUTED;
+                    doc.setFontSize(7);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(...pc);
+                    doc.text(item.priority[0].toUpperCase(), x + colWidth - 8, itemY);
+                    doc.setFontSize(9.5);
+                }
+                itemY += lines.length * lh(9.5) + 3;
+            });
+        }
+    };
+
+    const renderRow = (leftKey, rightKey) => {
+        const leftM = measureQuadrant(swotData.points[leftKey]);
+        const rightM = measureQuadrant(swotData.points[rightKey]);
+        const rowHeight = Math.max(leftM.height, rightM.height);
+
+        checkPageBreak(rowHeight + gridGap);
+
+        drawQuadrant(leftKey, margin, y, rowHeight);
+        drawQuadrant(rightKey, margin + colWidth + gridGap, y, rowHeight);
+
+        y += rowHeight + gridGap;
+    };
+
+    renderRow("strengths", "weaknesses");
+    renderRow("opportunities", "threats");
+
+    // =====================================================
+    // Apply header/footer to all pages at the end
+    // =====================================================
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        pageNum = i;
+        drawHeaderFooter();
+    }
+
+    doc.save(`${company.replace(/\s+/g, '_')}_Strategic_Audit.pdf`);
 }
 
 function clearAllData() {
