@@ -357,17 +357,21 @@ async function initSummaryPage() {
 
     await new Promise(r => setTimeout(r, 1500));
     
-    const s1 = swotData.points.strengths[0]?.text || "core capabilities";
-    const o1 = swotData.points.opportunities[0]?.text || "emerging market trends";
-    const w1 = swotData.points.weaknesses[0]?.text || "operational constraints";
-    const t1 = swotData.points.threats[0]?.text || "competitive pressures";
+    const company = swotData.companyName || "The organization";
+    const s = swotData.points.strengths[0]?.text || "core operational capabilities";
+    const o = swotData.points.opportunities[0]?.text || "emerging market trends";
+    const w = swotData.points.weaknesses[0]?.text || "internal resource constraints";
+    const t = swotData.points.threats[0]?.text || "competitive industry pressures";
 
     aiContent.innerHTML = `
         <p class="font-body-md text-on-surface-variant mb-4 leading-relaxed">
-            The primary strategic directive is to leverage <strong class="text-swot-threat font-semibold">${s1}</strong> (Strength) to penetrate <strong class="text-swot-threat font-semibold">${o1}</strong> (Opportunity) before external shifts solidify the market.
+            Based on the analysis, ${company} possesses a critical advantage in <strong class="text-swot-threat font-semibold">"${s}"</strong>. By leveraging this strength, leadership should proactively target <strong class="text-swot-threat font-semibold">"${o}"</strong>, creating a barrier to entry before external shifts solidify the market.
+        </p>
+        <p class="font-body-md text-on-surface-variant mb-4 leading-relaxed">
+            However, immediate strategic attention is required regarding <strong class="text-swot-threat font-semibold">"${w}"</strong>. If left unaddressed, this vulnerability significantly amplifies the risk posed by <strong class="text-swot-threat font-semibold">"${t}"</strong>.
         </p>
         <p class="font-body-md text-on-surface-variant leading-relaxed">
-            Immediate attention is required regarding <strong class="text-swot-threat font-semibold">${w1}</strong> (Weakness). Transitioning to a structured approach will mitigate the risk of <strong class="text-swot-threat font-semibold">${t1}</strong> (Threat) and allow the firm to capitalize on its high-precision competitive advantage.
+            <strong>Recommendation:</strong> Transitioning to a structured framework that mitigates this weakness will allow the firm to capitalize on its high-precision competitive advantage and sustain long-term growth.
         </p>
     `;
     
@@ -377,41 +381,103 @@ async function initSummaryPage() {
 function downloadSummary() {
     window.scrollTo(0,0);
     const element = document.getElementById('pdf-content');
-    const header = document.getElementById('pdf-header');
-    const grid = document.getElementById('pdf-grid');
-    const aiSection = document.getElementById('pdf-ai-section');
-
-    const pageBreak = document.createElement('div');
-    pageBreak.classList.add('html2pdf__page-break');
-
-    // Temporarily reorder DOM for the PDF and remove bottom spacing to prevent blank page
-    if (grid && aiSection) {
-        element.insertBefore(aiSection, grid);
-        element.insertBefore(pageBreak, grid);
-        grid.classList.remove('mb-16');
-        element.style.paddingBottom = '0px';
-    }
-
-    const opt = {
-        margin:       10,
-        filename:     `${(swotData.companyName || 'Project_Lotus').replace(/\\s+/g, '_')}_Strategic_Audit.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ['css', 'legacy'], avoid: ['li'] }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Config
+    const margin = 20;
+    let y = margin;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const maxLineWidth = pageWidth - (margin * 2);
+    
+    // Helpers
+    const addText = (text, size, isBold, color = [0, 0, 0], xOffset = 0, isCentered = false) => {
+        doc.setFontSize(size);
+        doc.setFont("helvetica", isBold ? "bold" : "normal");
+        doc.setTextColor(color[0], color[1], color[2]);
+        const lines = doc.splitTextToSize(text, maxLineWidth - xOffset * 2);
+        
+        // Page break check
+        if (y + (lines.length * size * 0.4) > doc.internal.pageSize.getHeight() - margin) {
+            doc.addPage();
+            y = margin;
+        }
+        
+        if (isCentered) {
+            lines.forEach(line => {
+                const w = doc.getTextWidth(line);
+                doc.text(line, (pageWidth - w) / 2, y);
+                y += (size * 0.4) + 2;
+            });
+            y += 2;
+        } else {
+            doc.text(lines, margin + xOffset, y);
+            y += (lines.length * size * 0.4) + 6; // better line spacing
+        }
     };
 
-    html2pdf().set(opt).from(element).save().then(() => {
-        // Restore original DOM order and spacing
-        if (grid && aiSection) {
-            if (pageBreak.parentNode) {
-                pageBreak.parentNode.removeChild(pageBreak);
-            }
-            element.insertBefore(grid, aiSection);
-            grid.classList.add('mb-16');
-            element.style.paddingBottom = '';
+    // Title
+    const company = swotData.companyName || "Project Lotus";
+    doc.setFillColor(99, 14, 212);
+    doc.roundedRect(margin, y, maxLineWidth, 40, 4, 4, 'F');
+    y += 18; // Move baseline inside the box
+    addText(`Strategic Audit: ${company}`, 22, true, [255, 255, 255], 0, true);
+    
+    y -= 1; // minor spacing tweak for subtitle
+    const dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    addText(`Prepared on ${dateStr}`, 10, false, [220, 200, 255], 0, true);
+    y = 85;
+    // Synthesis Text
+    addText("Synthesis & Recommendation", 16, true, [0, 0, 0]);
+    y += 5;
+    
+    const s = swotData.points.strengths[0]?.text || "core operational capabilities";
+    const o = swotData.points.opportunities[0]?.text || "emerging market trends";
+    const w = swotData.points.weaknesses[0]?.text || "internal resource constraints";
+    const t = swotData.points.threats[0]?.text || "competitive industry pressures";
+    
+    addText(`Based on the analysis, ${company} possesses a critical advantage in "${s}". By leveraging this strength, leadership should proactively target "${o}", creating a barrier to entry before external shifts solidify the market.`, 11, false, [60, 60, 60]);
+    addText(`However, immediate strategic attention is required regarding "${w}". If left unaddressed, this vulnerability significantly amplifies the risk posed by "${t}".`, 11, false, [60, 60, 60]);
+    addText(`Recommendation: Transitioning to a structured framework that mitigates this weakness will allow the firm to capitalize on its high-precision competitive advantage and sustain long-term growth.`, 11, true, [40, 40, 40]);
+    y += 15;
+
+    // SWOT Categories
+    const renderCategory = (title, items) => {
+        // Page break check for header
+        if (y + 30 > doc.internal.pageSize.getHeight() - margin) {
+            doc.addPage();
+            y = margin;
         }
-    });
+
+        // Draw Purple Accent Box for Header (rounded)
+        doc.setFillColor(99, 14, 212); // swot-threat purple
+        doc.roundedRect(margin, y, maxLineWidth, 14, 2, 2, 'F');
+        
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(255, 255, 255);
+        doc.text(title.toUpperCase(), margin + 8, y + 10); // Added left padding
+        y += 22;
+
+        if (items.length === 0) {
+            addText("No points added.", 11, false, [100, 100, 100], 8);
+            y += 5;
+            return;
+        }
+        
+        items.forEach(item => {
+            addText(`• ${item.text}`, 11, false, [40, 40, 40], 8);
+        });
+        y += 8;
+    };
+
+    renderCategory("Strengths", swotData.points.strengths);
+    renderCategory("Weaknesses", swotData.points.weaknesses);
+    renderCategory("Opportunities", swotData.points.opportunities);
+    renderCategory("Threats", swotData.points.threats);
+
+    // Save
+    doc.save(`${(swotData.companyName || 'Project_Lotus').replace(/\s+/g, '_')}_Strategic_Audit.pdf`);
 }
 
 function clearAllData() {

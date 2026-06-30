@@ -111,7 +111,7 @@
 <body class="font-body-md text-body-md flex flex-col min-h-screen overflow-x-hidden bg-surface text-on-surface">
     <!-- TopAppBar -->
     <header class="bg-white/80 backdrop-blur-md border-b border-border-subtle docked full-width top-0 sticky z-50 transition-all duration-300">
-        <div class="flex justify-between items-center w-full h-20 px-margin-desktop max-w-container-max mx-auto">
+        <div class="flex justify-between items-center w-full h-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
             <a href="index.html" class="flex items-center gap-3 cursor-pointer no-underline">
                 <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-md">
                     <span class="material-symbols-outlined text-white text-base">spa</span>
@@ -129,7 +129,7 @@
 
     <!-- SECTION: INPUT INTERFACE -->
     <section id="input-section" class="flex-grow flex flex-col relative">
-        <div class="py-12 px-margin-desktop max-w-container-max mx-auto w-full">
+        <div class="py-12 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
                 <div>
                     <span class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-2 block">Strategic Framework</span>
@@ -152,7 +152,7 @@
             </div>
         </div>
         
-        <div class="flex-grow pb-24 px-margin-desktop">
+        <div class="flex-grow pb-24 px-margin-mobile md:px-margin-desktop">
             <div class="max-w-container-max mx-auto flex flex-col h-full">
                 <div class="swot-grid h-full min-h-[700px] bg-white border border-border-subtle rounded-2xl overflow-hidden shadow-md mb-10">
                 <!-- Strengths -->
@@ -164,9 +164,9 @@
                             </div>
                             <h2 class="font-headline-sm text-headline-sm text-swot-strength">Strengths</h2>
                             <span id="count-strengths" class="bg-surface-variant text-on-surface-variant text-xs font-bold px-2 py-1 rounded-full">0</span>
-                            <div class="group relative flex items-center ml-2">
+                            <div class="group/tooltip relative flex items-center ml-2">
                                 <span class="material-symbols-outlined text-outline-variant hover:text-primary cursor-help text-[20px] transition-colors">info</span>
-                                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-4 bg-inverse-surface text-inverse-on-surface font-body-md text-sm rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none shadow-xl border border-white/10">
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-4 bg-inverse-surface text-inverse-on-surface font-body-md text-sm rounded-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 pointer-events-none shadow-xl border border-white/10">
                                     <p class="font-bold mb-2 text-primary-fixed-dim uppercase tracking-wider text-xs">Guiding Questions:</p>
                                     <ul class="list-disc pl-4 space-y-1.5 text-on-primary/90">
                                         <li>What do you do better than competitors?</li>
@@ -207,9 +207,9 @@
                             </div>
                             <h2 class="font-headline-sm text-headline-sm text-swot-weakness">Weaknesses</h2>
                             <span id="count-weaknesses" class="bg-surface-variant text-on-surface-variant text-xs font-bold px-2 py-1 rounded-full">0</span>
-                            <div class="group relative flex items-center ml-2">
+                            <div class="group/tooltip relative flex items-center ml-2">
                                 <span class="material-symbols-outlined text-outline-variant hover:text-primary cursor-help text-[20px] transition-colors">info</span>
-                                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-4 bg-inverse-surface text-inverse-on-surface font-body-md text-sm rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none shadow-xl border border-white/10">
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-4 bg-inverse-surface text-inverse-on-surface font-body-md text-sm rounded-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 pointer-events-none shadow-xl border border-white/10">
                                     <p class="font-bold mb-2 text-primary-fixed-dim uppercase tracking-wider text-xs">Guiding Questions:</p>
                                     <ul class="list-disc pl-4 space-y-1.5 text-on-primary/90">
                                         <li>Where are you losing customers?</li>
@@ -250,9 +250,9 @@
                             </div>
                             <h2 class="font-headline-sm text-headline-sm text-primary">Opportunities</h2>
                             <span id="count-opportunities" class="bg-surface-variant text-on-surface-variant text-xs font-bold px-2 py-1 rounded-full">0</span>
-                            <div class="group relative flex items-center ml-2">
+                            <div class="group/tooltip relative flex items-center ml-2">
                                 <span class="material-symbols-outlined text-outline-variant hover:text-primary cursor-help text-[20px] transition-colors">info</span>
-                                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-4 bg-inverse-surface text-inverse-on-surface font-body-md text-sm rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none shadow-xl border border-white/10">
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-4 bg-inverse-surface text-inverse-on-surface font-body-md text-sm rounded-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 pointer-events-none shadow-xl border border-white/10">
                                     <p class="font-bold mb-2 text-primary-fixed-dim uppercase tracking-wider text-xs">Guiding Questions:</p>
                                     <ul class="list-disc pl-4 space-y-1.5 text-on-primary/90">
                                         <li>What market trends can you take advantage of?</li>
@@ -293,9 +293,9 @@
                             </div>
                             <h2 class="font-headline-sm text-headline-sm text-swot-threat">Threats</h2>
                             <span id="count-threats" class="bg-surface-variant text-on-surface-variant text-xs font-bold px-2 py-1 rounded-full">0</span>
-                            <div class="group relative flex items-center ml-2">
+                            <div class="group/tooltip relative flex items-center ml-2">
                                 <span class="material-symbols-outlined text-outline-variant hover:text-primary cursor-help text-[20px] transition-colors">info</span>
-                                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-4 bg-inverse-surface text-inverse-on-surface font-body-md text-sm rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none shadow-xl border border-white/10">
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-4 bg-inverse-surface text-inverse-on-surface font-body-md text-sm rounded-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 pointer-events-none shadow-xl border border-white/10">
                                     <p class="font-bold mb-2 text-primary-fixed-dim uppercase tracking-wider text-xs">Guiding Questions:</p>
                                     <ul class="list-disc pl-4 space-y-1.5 text-on-primary/90">
                                         <li>What competitors or regulations could impact you?</li>
@@ -345,7 +345,7 @@
 
     <!-- Footer -->
     <footer class="bg-surface-container-lowest border-t border-border-subtle mt-auto full-width">
-        <div class="max-w-container-max mx-auto px-margin-desktop py-gutter flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-gutter flex flex-col md:flex-row justify-between items-center gap-4">
             <span class="font-display-lg text-headline-md font-black text-primary">PurpLotus</span>
             <div class="flex gap-8">
                 <a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>

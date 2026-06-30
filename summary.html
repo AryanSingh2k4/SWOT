@@ -107,12 +107,13 @@
         }
     </script>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- jsPDF for text-based PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body class="font-body-md text-body-md flex flex-col min-h-screen overflow-x-hidden bg-surface text-on-surface">
     <!-- TopAppBar -->
     <header class="bg-white/80 backdrop-blur-md border-b border-border-subtle docked full-width top-0 sticky z-50 transition-all duration-300">
-        <div class="flex justify-between items-center w-full h-20 px-margin-desktop max-w-container-max mx-auto">
+        <div class="flex justify-between items-center w-full h-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
             <a href="index.html" class="flex items-center gap-3 cursor-pointer no-underline">
                 <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-md">
                     <span class="material-symbols-outlined text-white text-base">spa</span>
@@ -135,7 +136,7 @@
 
     <!-- SECTION: SUMMARY & EXPORT -->
     <section id="summary-section" class="flex-grow bg-surface">
-        <main class="max-w-container-max mx-auto w-full px-margin-desktop py-12" id="pdf-content">
+        <main class="max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop py-12" id="pdf-content">
             <!-- Header Section -->
             <div id="pdf-header" class="mb-16">
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -206,13 +207,13 @@
                 </div>
             </div>
 
-            <!-- AI Summary & Strategic Roadmap -->
+            <!-- Synthesis & Strategic Roadmap -->
             <div id="pdf-ai-section" class="grid grid-cols-1 md:grid-cols-3 gap-8 print-break-inside-avoid">
                 <div class="md:col-span-2 bg-surface-container-lowest border border-border-subtle p-8 rounded-xl relative">
                     <!-- Loading Overlay -->
                     <div id="ai-loading" class="absolute inset-0 bg-white/90 rounded-xl flex flex-col items-center justify-center z-10 hidden">
                         <span class="material-symbols-outlined text-primary text-4xl animate-spin mb-4">progress_activity</span>
-                        <p class="font-body-md text-primary font-medium">Generating Strategic AI Synthesis...</p>
+                        <p class="font-body-md text-primary font-medium">Generating Strategic Synthesis...</p>
                     </div>
 
                     <h3 class="font-headline-sm text-headline-sm text-on-surface mb-6 flex items-center gap-2">
@@ -256,7 +257,7 @@
 
     <!-- Footer -->
     <footer class="bg-surface-container-lowest border-t border-border-subtle mt-auto full-width">
-        <div class="max-w-container-max mx-auto px-margin-desktop py-gutter flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-gutter flex flex-col md:flex-row justify-between items-center gap-4">
             <span class="font-display-lg text-headline-md font-black text-primary">PurpLotus</span>
             <div class="flex gap-8">
                 <a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
