@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>PurpLotus | Strategic Audit Summary</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "border-subtle": "#E5E7EB",
+                        "secondary-fixed-dim": "#ccbeff",
+                        "on-secondary-container": "#524584",
+                        "on-primary-container": "#ede0ff",
+                        "surface-bright": "#f8f9ff",
+                        "primary-fixed-dim": "#d2bbff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#7d3d00",
+                        "tertiary-fixed-dim": "#ffb784",
+                        "error-container": "#ffdad6",
+                        "swot-strength": "#7C3AED",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#732ee4",
+                        "surface-lavender": "#F5F3FF",
+                        "on-secondary-fixed": "#1e0e4e",
+                        "on-tertiary-container": "#ffe0cd",
+                        "on-secondary-fixed-variant": "#4a3d7c",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#a15100",
+                        "secondary-fixed": "#e7deff",
+                        "on-tertiary-fixed": "#301400",
+                        "on-tertiary": "#ffffff",
+                        "swot-threat": "#4C1D95",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-background": "#121c2a",
+                        "surface-dim": "#d0dbed",
+                        "swot-weakness": "#A78BFA",
+                        "inverse-primary": "#d2bbff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#25005a",
+                        "outline": "#7b7487",
+                        "primary": "#630ed4",
+                        "surface-container": "#e6eeff",
+                        "surface": "#f8f9ff",
+                        "secondary": "#625595",
+                        "surface-variant": "#d9e3f6",
+                        "primary-container": "#7c3aed",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "on-surface-variant": "#4a4455",
+                        "on-surface": "#121c2a",
+                        "surface-container-highest": "#d9e3f6",
+                        "outline-variant": "#ccc3d8",
+                        "on-tertiary-fixed-variant": "#713700",
+                        "inverse-surface": "#27313f",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-high": "#dee9fc",
+                        "secondary-container": "#c6b7ff",
+                        "on-primary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "swot-opportunity": "#DDD6FE"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Playfair Display"],
+                        "headline-sm": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "quote": ["Playfair Display"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "quote": ["20px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="font-body-md text-body-md flex flex-col min-h-screen overflow-x-hidden bg-surface text-on-surface">
+    <!-- TopAppBar -->
+    <header class="bg-surface border-b border-border-subtle docked full-width top-0 sticky z-50 transition-all duration-300">
+        <div class="flex justify-between items-center w-full h-20 px-margin-desktop max-w-container-max mx-auto">
+            <a href="index.html" class="flex items-center gap-3 cursor-pointer no-underline">
+                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-md">
+                    <span class="material-symbols-outlined text-white text-base">spa</span>
+                </div>
+                <span class="font-display-lg text-headline-md md:text-[36px] font-black tracking-tight text-primary flex items-center gap-2">
+                    PurpLotus
+                </span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-on-surface-variant font-medium hover:text-primary transition-all duration-300 no-underline" href="input.html">Analysis</a>
+                <a class="text-primary border-b-2 border-primary pb-1 font-semibold no-underline" href="index.html">Framework</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <button id="nav-download-btn" class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-caps hover:bg-primary-container transition-all shadow-sm no-print active:opacity-80 active:scale-95" onclick="downloadSummary()">
+                    Download PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION: SUMMARY & EXPORT -->
+    <section id="summary-section" class="flex-grow bg-surface">
+        <main class="max-w-container-max mx-auto w-full px-margin-desktop py-12" id="pdf-content">
+            <!-- Header Section -->
+            <div id="pdf-header" class="mb-16">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <span class="font-label-caps text-primary mb-2 block uppercase tracking-widest">Project Executive Summary</span>
+                        <h1 class="font-display-lg text-display-lg text-on-surface" id="summary-title">Strategic Audit: Project Lotus</h1>
+                        <p class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-2xl leading-relaxed">
+                            A comprehensive SWOT synthesis evaluating the current competitive landscape, internal operational efficiency, and future-state growth trajectories.
+                        </p>
+                    </div>
+                    <div class="text-right hidden md:block">
+                        <p class="font-label-caps text-on-surface-variant">Authored by</p>
+                        <p class="font-body-md font-semibold text-on-surface">PurpLotus Consultancy</p>
+                        <p class="font-body-md text-on-surface-variant" id="summary-date">November 24, 2024</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 2x2 SWOT Grid -->
+            <div id="pdf-grid" class="mb-16">
+                <div class="flex flex-col bg-[#ccc3d8] border border-outline-variant rounded-xl overflow-hidden shadow-sm gap-[2px]">
+                    <!-- ROW 1 -->
+                    <div class="flex flex-col md:flex-row gap-[2px] break-inside-avoid w-full">
+                        <!-- STRENGTHS -->
+                        <div class="swot-cell bg-surface-lavender/30 flex-1 w-full md:w-1/2">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-10 h-10 rounded-full bg-swot-strength flex items-center justify-center text-white shadow-sm">
+                                    <span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+                                </div>
+                                <h2 class="font-headline-sm text-headline-sm text-swot-strength">Strengths</h2>
+                            </div>
+                            <ul class="space-y-4" id="summary-strengths-list"></ul>
+                        </div>
+                        <!-- WEAKNESSES -->
+                        <div class="swot-cell bg-surface-lavender/10 flex-1 w-full md:w-1/2">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-10 h-10 rounded-full bg-swot-weakness flex items-center justify-center text-white shadow-sm">
+                                    <span class="material-symbols-outlined" data-icon="bar_chart">bar_chart</span>
+                                </div>
+                                <h2 class="font-headline-sm text-headline-sm text-swot-weakness">Weaknesses</h2>
+                            </div>
+                            <ul class="space-y-4" id="summary-weaknesses-list"></ul>
+                        </div>
+                    </div>
+                    <!-- ROW 2 -->
+                    <div class="flex flex-col md:flex-row gap-[2px] break-inside-avoid w-full">
+                        <!-- OPPORTUNITIES -->
+                        <div class="swot-cell bg-surface-lavender/20 flex-1 w-full md:w-1/2">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-10 h-10 rounded-full bg-swot-opportunity flex items-center justify-center text-primary shadow-sm border border-primary/20">
+                                    <span class="material-symbols-outlined" data-icon="lightbulb">lightbulb</span>
+                                </div>
+                                <h2 class="font-headline-sm text-headline-sm text-primary">Opportunities</h2>
+                            </div>
+                            <ul class="space-y-4" id="summary-opportunities-list"></ul>
+                        </div>
+                        <!-- THREATS -->
+                        <div class="swot-cell bg-on-background/5 flex-1 w-full md:w-1/2">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-10 h-10 rounded-full bg-swot-threat flex items-center justify-center text-white shadow-sm">
+                                    <span class="material-symbols-outlined" data-icon="warning">warning</span>
+                                </div>
+                                <h2 class="font-headline-sm text-headline-sm text-swot-threat">Threats</h2>
+                            </div>
+                            <ul class="space-y-4" id="summary-threats-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Summary & Strategic Roadmap -->
+            <div id="pdf-ai-section" class="grid grid-cols-1 md:grid-cols-3 gap-8 print-break-inside-avoid">
+                <div class="md:col-span-2 bg-surface-container-lowest border border-border-subtle p-8 rounded-xl relative">
+                    <!-- Loading Overlay -->
+                    <div id="ai-loading" class="absolute inset-0 bg-white/90 rounded-xl flex flex-col items-center justify-center z-10 hidden">
+                        <span class="material-symbols-outlined text-primary text-4xl animate-spin mb-4">progress_activity</span>
+                        <p class="font-body-md text-primary font-medium">Generating Strategic AI Synthesis...</p>
+                    </div>
+
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">psychology</span> Synthesis & Recommendation
+                    </h3>
+                    <div class="prose prose-slate max-w-none" id="ai-synthesis-content">
+                        <!-- AI content will be placed here -->
+                    </div>
+                    
+                    <div class="mt-8 flex gap-4 no-print" data-html2canvas-ignore="true">
+                        <button onclick="window.location.href='input.html'" class="bg-primary text-on-primary px-8 py-3 rounded-full font-label-caps hover:brightness-110 transition-all flex items-center gap-2">
+                            <span class="material-symbols-outlined" data-icon="edit">edit</span> Edit Analysis
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-surface-container-low border border-border-subtle p-8 rounded-xl flex flex-col">
+                    <h3 class="font-label-caps text-on-surface mb-6 uppercase tracking-widest">Key Statistics</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-xs text-on-surface-variant uppercase tracking-widest font-bold">Confidence Score</p>
+                            <div class="flex items-end gap-2 mt-1">
+                                <span class="text-4xl font-headline-md text-primary" id="confidence-score">92%</span>
+                                <span class="material-symbols-outlined text-primary pb-1" data-icon="verified">verified</span>
+                            </div>
+                            <div class="w-full bg-outline-variant h-1 mt-2 rounded-full overflow-hidden">
+                                <div id="confidence-bar" class="bg-primary h-full w-[92%] transition-all duration-1000"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs text-on-surface-variant uppercase tracking-widest font-bold">Audit Depth</p>
+                            <p class="font-body-md text-on-surface mt-1 font-medium" id="audit-depth">Comprehensive</p>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-outline-variant">
+                            <div class="w-full h-32 bg-cover bg-center rounded-xl grayscale opacity-60 hover:grayscale-0 transition-all duration-500" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD_PtZAomJ1LjslMUAKGNAaKhRacNKvjPDMaUgabNodLVZH7FR-I_J06VnAM5Tg2K2oGUxdPi3MCUnddbqmDzA3XWtIlt_ZG0wZGHSmtP3bd6SYuCwh_WkIS9SOzJXgwDYjXowvHhW-PxdrKjnnI5UmUh-Rq2DgRMkMLsqZVaAY3EjekZzUiUwuW-n_hRGIWCLWoaNXIk054zfbeYWjHTFhNZv64NdpW6DocjZnEl3ws6Sq_K7rhye3VhurhO1i6FvZmyowfyh_Cpeb')"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-lowest border-t border-border-subtle mt-auto full-width">
+        <div class="max-w-container-max mx-auto px-margin-desktop py-gutter flex flex-col md:flex-row justify-between items-center gap-4">
+            <span class="font-display-lg text-headline-md font-black text-primary">PurpLotus</span>
+            <div class="flex gap-8">
+                <a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+                <a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Methodology</a>
+                <a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Support</a>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface-variant">© 2026 PurpLotus Consultancy Pvt Ltd. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
