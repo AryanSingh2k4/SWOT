@@ -7,8 +7,23 @@
 body {
     -webkit-font-smoothing: antialiased;
 }
-.lotus-gradient-blur {
-    background: radial-gradient(circle at 50% 50%, rgba(99, 14, 212, 0.05) 0%, rgba(248, 249, 255, 0) 70%);
+.animated-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: gradient-move 10s infinite alternate ease-in-out;
+    z-index: -10;
+}
+.blob-1 { background: rgba(99, 14, 212, 0.4); width: 400px; height: 400px; top: -100px; left: -100px; }
+.blob-2 { background: rgba(239, 68, 68, 0.3); width: 300px; height: 300px; bottom: -50px; right: -50px; animation-delay: -3s; }
+.blob-3 { background: rgba(59, 130, 246, 0.3); width: 350px; height: 350px; top: 150px; left: 35%; animation-delay: -6s; }
+
+@keyframes gradient-move {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -60px) scale(1.1); }
+    66% { transform: translate(-30px, 30px) scale(0.9); }
+    100% { transform: translate(0, 0) scale(1); }
 }
 .hover-lift {
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);

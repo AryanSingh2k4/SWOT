@@ -364,10 +364,10 @@ async function initSummaryPage() {
 
     aiContent.innerHTML = `
         <p class="font-body-md text-on-surface-variant mb-4 leading-relaxed">
-            The primary strategic directive is to leverage <strong class="text-primary font-semibold">${s1}</strong> (Strength) to penetrate <strong class="text-primary font-semibold">${o1}</strong> (Opportunity) before external shifts solidify the market.
+            The primary strategic directive is to leverage <strong class="text-swot-threat font-semibold">${s1}</strong> (Strength) to penetrate <strong class="text-swot-threat font-semibold">${o1}</strong> (Opportunity) before external shifts solidify the market.
         </p>
         <p class="font-body-md text-on-surface-variant leading-relaxed">
-            Immediate attention is required regarding <strong class="text-swot-weakness font-semibold">${w1}</strong> (Weakness). Transitioning to a structured approach will mitigate the risk of <strong class="text-swot-threat font-semibold">${t1}</strong> (Threat) and allow the firm to capitalize on its high-precision competitive advantage.
+            Immediate attention is required regarding <strong class="text-swot-threat font-semibold">${w1}</strong> (Weakness). Transitioning to a structured approach will mitigate the risk of <strong class="text-swot-threat font-semibold">${t1}</strong> (Threat) and allow the firm to capitalize on its high-precision competitive advantage.
         </p>
     `;
     
